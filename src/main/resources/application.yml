@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: trackerapi
+
+  datasource:
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+    url: ${DATASOURCE_URL}
+    driverClassName: ${DATASOURCE_DRIVER}
+
+  thymeleaf:
+    check-template-location: false
+
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate.format-sql: true
+    open-in-view: false
+
+logging:
+  pattern:
+    console: '%clr(%d{dd-MM-yyyy HH:mm:ss}){faint} %clr(%5p) %clr([%t]){faint} %clr(%-40.40logger){cyan} %clr(:){yellow} %m%n'
+  file:
+    name: app.log
+    #  level:
+    #    root: info
+    io:
+      github:
+        viniciusgaspari: trace
+    org:
+      springframework:
+        web: debug
+        security: trace
+
+management:
+  server:
+    port: 9090
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+springdoc:
+  override-with-generic-response: false

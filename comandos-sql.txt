@@ -1,0 +1,111 @@
+create table usuario (
+
+    id uuid not null primary key,
+    nome varchar not null,
+    cidade varchar not null,
+    contrato uuid not null references contrato(id),
+    conta uuid references conta(id),
+    data_cadastro timestamp,
+    data_atualizacao timestamp
+
+);
+
+
+create table contrato(
+
+    id uuid not null primary key,
+    nome varchar not null,
+    quantidade integer not null,
+    preco numeric(5,2) not null,
+    data_cadastro timestamp,
+    data_atualizacao timestamp
+
+);
+
+create table conta(
+
+	id uuid not null primary key,
+	username varchar not null,
+	password varchar not null,
+	role uuid not null references role(id),
+	data_cadastro timestamp,
+	data_atualizacao timestamp
+
+);
+
+
+
+insert into contrato
+(id, nome, quantidade, preco, data_cadastro, data_atualizacao)
+values
+(uuid_generate_v4(), 'basico', 5, 29.90, now(), now())
+(uuid_generate_v4(), 'intermediario', 10, 49.90, now(), now())
+(uuid_generate_v4(), 'avançado', 20, 69.90, now(), now())
+(uuid_generate_v4(), 'empresa', 30, 99.90, now(), now())
+
+
+CREATE TABLE client(
+
+   id uuid not null primary key,
+   client_id varchar(150) not null,
+   client_secret varchar(400) not null,
+   redirect_uri varchar(200) not null,
+   scope varchar(50),
+   data_cadastro timestamp,
+   data_atualizacao timestamp
+
+
+);
+
+insert into client
+(id, client_id, client_secret, redirect_uri, scope)
+values
+(uuid_generate_v4(), 'id', 'secret', 'http://localhost:8080/callback', 'admin')
+
+
+create table role (
+
+    id uuid not null primary key,
+    nome varchar not null,
+    data_cadastro timestamp,
+    data_atualizacao timestamp
+
+);
+
+insert into role
+(id, nome, data_cadastro, data_atualizacao)
+values
+(uuid_generate_v4(), 'admin', now(), now())
+(uuid_generate_v4(), 'assistente', now(), now())
+(uuid_generate_v4(), 'usuario', now(), now())
+
+create table rastreador(
+
+    id uuid not null primary key,
+    nome varchar not null,
+    data_cadastro timestamp,
+    data_atualizacao timestamp,
+    usuario uuid references usuario(id),
+    operadora uuid not null references operadora(id)
+
+);
+
+insert into rastreador
+(id, nome, operadora, data_cadastro, data_atualizacao)
+values
+(uuid_generate_v4(), '17TRACK', '191c989b-708d-4fbe-bc43-8dc284f87aa3', now(), now());
+
+create table operadora (
+
+    id uuid not null primary key,
+    nome varchar not null,
+    data_cadastro timestamp,
+    data_atualizacao timestamp,
+    linha numeric(12, 0) not null
+
+);
+
+insert into operadora
+(id, nome, linha)
+values
+('191c989b-708d-4fbe-bc43-8dc284f87aa3', 'VIVO', 551999999999)
