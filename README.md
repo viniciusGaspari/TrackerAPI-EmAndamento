@@ -8,9 +8,5 @@
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" width="100" title="Docker" />
 </div>
 
-<<<<<<< HEAD
 # TrackerAPI-EmAndamento
-=======
-# TrackerAPI
->>>>>>> 7d2056e (Melhoras na pasta Service e Validator)
 Projeto Pessoal - Utilizando o que eu aprendi no curso Spring Boot Expert do Dougllas Sousa
