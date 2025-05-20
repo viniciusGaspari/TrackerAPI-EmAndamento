@@ -6,6 +6,7 @@ import io.github.vinicusgaspari.trackerapi.model.Rastreador;
 import io.github.vinicusgaspari.trackerapi.service.RastreadorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,8 +45,20 @@ public class RastreadorController implements GenericController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RastreadorResponse> atualizarPorId(@PathVariable(required = true) UUID id, @RequestBody(required = true) RastreadorResponse response){
+    public ResponseEntity<RastreadorResponse> atualizarPorId(@PathVariable(required = true) UUID id, @RequestBody(required = true) RastreadorResponse response) {
         return ResponseEntity.ok(mapper.toDTO(service.atualizarPorId(id, mapper.toEntity(response))));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<RastreadorResponse>> buscarPorFiltro(
+            @RequestParam(value = "id", required = false) UUID id,
+            @RequestParam(value = "nome", required = false) String nome,
+            @RequestParam(value = "idUsuario", required = false) UUID idUsuario,
+            @RequestParam(value = "idOperadora", required = false) UUID idOperadora,
+            @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
+            @RequestParam(value = "tamanhoPagina", defaultValue = "5") Integer tamanhoPagina
+    ) {
+        return ResponseEntity.ok(service.buscarPorFiltro(id, nome, idUsuario, idOperadora, pagina, tamanhoPagina).map(mapper::toDTO));
     }
 
 }

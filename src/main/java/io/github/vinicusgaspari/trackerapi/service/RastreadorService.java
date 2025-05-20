@@ -10,10 +10,15 @@ import io.github.vinicusgaspari.trackerapi.validator.security.UsuarioAutenticado
 import io.github.vinicusgaspari.trackerapi.validator.security.ValidarAcessoUsuario;
 import io.github.vinicusgaspari.trackerapi.validator.usuario.UsuarioValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+
+import static io.github.vinicusgaspari.trackerapi.validator.rastreador.RastreadorSpecs.*;
 
 @Service
 @RequiredArgsConstructor
@@ -55,6 +60,30 @@ public class RastreadorService {
         rastreadorEncontrado.setNome(rastreadorValidator.validarNomeUsuarioExistente(rastreador.getNome(), id));
         rastreadorEncontrado.setOperadora(operadoraValidator.validarOperadoraPorId(rastreador.getOperadora().getId()));
         return rastreadorRepository.save(rastreadorEncontrado);
+    }
+
+    public Page<Rastreador> buscarPorFiltro(UUID id, String nome, UUID usuario, UUID operadora, Integer pagina, Integer tamanhoPagina) {
+
+        Specification<Rastreador> specs = Specification.where((root, query, cb) -> cb.and(
+                cb.conjunction(),
+                cb.equal(root.get("usuario").get("conta").get("username"), usernameContaAutenticado.obtendoUsuarioAutenticado())
+        ));
+
+        if (id != null) {
+            specs = specs.and(isIdEqual(id));
+        }
+        if (nome != null) {
+            specs = specs.and(isNomeLike(nome));
+        }
+        if (usuario != null) {
+            specs = specs.and(isUsuarioEqual(usuario));
+        }
+        if (operadora != null) {
+            specs = specs.and(isOperadoraEqual(operadora));
+        }
+
+        return rastreadorRepository.findAll(specs, PageRequest.of(pagina, tamanhoPagina));
+
     }
 
 }
