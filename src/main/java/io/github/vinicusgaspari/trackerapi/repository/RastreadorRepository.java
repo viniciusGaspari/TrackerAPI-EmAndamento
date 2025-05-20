@@ -13,4 +13,5 @@ public interface RastreadorRepository extends JpaRepository<Rastreador, UUID> {
     Integer countByUsuario(Usuario usuario);
     List<Rastreador> findByUsuario(Usuario usuario);
     Optional<Rastreador> findByNome(String nome);
+    boolean existsByNome(String nome);
 }

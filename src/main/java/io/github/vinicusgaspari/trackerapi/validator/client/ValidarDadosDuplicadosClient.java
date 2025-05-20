@@ -1,6 +1,6 @@
 package io.github.vinicusgaspari.trackerapi.validator.client;
 
-import io.github.vinicusgaspari.trackerapi.controller.exceptions.DuplicatedDataException;
+import io.github.vinicusgaspari.trackerapi.controller.exceptions.DadoDuplicadoException;
 import io.github.vinicusgaspari.trackerapi.model.Client;
 import io.github.vinicusgaspari.trackerapi.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class ValidarDadosDuplicadosClient {
         }
 
         if (!duplicatedField.isEmpty()) {
-            throw new DuplicatedDataException(duplicatedField);
+            throw new DadoDuplicadoException(duplicatedField);
         }
 
     }
@@ -47,7 +47,7 @@ public class ValidarDadosDuplicadosClient {
         }
 
         if (!duplicatedField.isEmpty()) {
-            throw new DuplicatedDataException(duplicatedField);
+            throw new DadoDuplicadoException(duplicatedField);
         }
 
     }

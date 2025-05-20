@@ -1,7 +1,7 @@
 package io.github.vinicusgaspari.trackerapi.validator.usuario;
 
 import io.github.vinicusgaspari.trackerapi.model.Usuario;
-import io.github.vinicusgaspari.trackerapi.validator.UsuarioAutenticado;
+import io.github.vinicusgaspari.trackerapi.validator.security.UsuarioAutenticado;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.UUID;

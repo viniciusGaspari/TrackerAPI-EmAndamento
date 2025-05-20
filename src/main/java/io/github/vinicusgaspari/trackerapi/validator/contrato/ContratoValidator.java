@@ -1,6 +1,6 @@
 package io.github.vinicusgaspari.trackerapi.validator.contrato;
 
-import io.github.vinicusgaspari.trackerapi.controller.exceptions.QuantidadeLimiteContratoException;
+import io.github.vinicusgaspari.trackerapi.controller.exceptions.QuantidadeContratoException;
 import io.github.vinicusgaspari.trackerapi.controller.mapper.RastreadorMapper;
 import io.github.vinicusgaspari.trackerapi.model.Contrato;
 import io.github.vinicusgaspari.trackerapi.model.Usuario;
@@ -22,7 +22,7 @@ public class ContratoValidator {
         Integer quantidadeContrato = obterQuantidadePermitidaNoContrato(contrato);
         Integer quantidadeUsuario = obterQuantidadeRastreadoresDoUsuario(usuario);
         if (quantidadeUsuario >= quantidadeContrato) {
-            throw new QuantidadeLimiteContratoException(mapper.toListDTO(rastreadorRepository.findByUsuario(usuario)), quantidadeContrato);
+            throw new QuantidadeContratoException(mapper.toListDTO(rastreadorRepository.findByUsuario(usuario)), quantidadeContrato);
         }
     }
 
@@ -34,6 +34,11 @@ public class ContratoValidator {
         return contratoRepository.findById(contrato.getId())
                 .orElseThrow(() -> new EntityNotFoundException("CONTRATO"))
                 .getQuantidade();
+    }
+
+    public Contrato obterContratoPorNome(String nome){
+        return contratoRepository.findByNome(nome)
+                .orElseThrow(() -> new EntityNotFoundException("CONTRATO"));
     }
 
 }

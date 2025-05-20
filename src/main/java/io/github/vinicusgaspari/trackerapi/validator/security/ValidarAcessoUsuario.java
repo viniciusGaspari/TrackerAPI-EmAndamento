@@ -1,4 +1,4 @@
-package io.github.vinicusgaspari.trackerapi.validator;
+package io.github.vinicusgaspari.trackerapi.validator.security;
 
 import io.github.vinicusgaspari.trackerapi.controller.exceptions.AcessoNegadoException;
 import io.github.vinicusgaspari.trackerapi.model.Rastreador;
@@ -26,8 +26,8 @@ public class ValidarAcessoUsuario {
     }
 
     public Rastreador isAcessoValidoRasteador(UUID idUsuario, String usernameUsuarioLogado) {
-        Rastreador rastreador = rastreadorValidator.validarRastreadorPorId(idUsuario);
-        if (!rastreador.getUsuario().getNome().equals(usernameUsuarioLogado)) {
+        Rastreador rastreador = rastreadorValidator.buscarRastreadorPorId(idUsuario);
+        if (!rastreador.getUsuario().getConta().getUsername().equals(usernameUsuarioLogado)) {
             throw new AcessoNegadoException("Conta não tem acesso");
         }
         return rastreador;

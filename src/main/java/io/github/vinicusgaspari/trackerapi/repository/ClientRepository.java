@@ -10,7 +10,10 @@ import java.util.UUID;
 public interface ClientRepository extends JpaRepository<Client, UUID>, JpaSpecificationExecutor<Client> {
 
     boolean existsByClientId(String clientId);
+
     boolean existsByRedirectUri(String redirectUri);
+
     Optional<Client> findByClientId(String clientId);
+
     Optional<Client> findByRedirectUri(String redirectUri);
 }

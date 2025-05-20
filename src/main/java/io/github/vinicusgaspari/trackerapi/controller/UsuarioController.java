@@ -1,7 +1,7 @@
 package io.github.vinicusgaspari.trackerapi.controller;
 
 import io.github.vinicusgaspari.trackerapi.controller.mapper.UsuarioMapper;
-import io.github.vinicusgaspari.trackerapi.controller.response.PesquisasPorUsuarioDTO;
+import io.github.vinicusgaspari.trackerapi.controller.response.PesquisasPorUsuarioResponse;
 import io.github.vinicusgaspari.trackerapi.controller.response.UsuarioResponse;
 import io.github.vinicusgaspari.trackerapi.model.Usuario;
 import io.github.vinicusgaspari.trackerapi.service.UsuarioService;
@@ -101,7 +101,7 @@ public class UsuarioController implements GenericController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista de usuários encontrada")
     })
-    public ResponseEntity<Page<PesquisasPorUsuarioDTO>> buscarComFiltro(
+    public ResponseEntity<Page<PesquisasPorUsuarioResponse>> buscarComFiltro(
             @Parameter(description = "UUID", example = "550e8400-e29b-41d4-a716-446655440000")
             @RequestParam(value = "id", required = false) UUID id,
 

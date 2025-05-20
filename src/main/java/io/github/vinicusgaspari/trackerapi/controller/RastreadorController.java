@@ -3,7 +3,6 @@ package io.github.vinicusgaspari.trackerapi.controller;
 import io.github.vinicusgaspari.trackerapi.controller.mapper.RastreadorMapper;
 import io.github.vinicusgaspari.trackerapi.controller.response.RastreadorResponse;
 import io.github.vinicusgaspari.trackerapi.model.Rastreador;
-import io.github.vinicusgaspari.trackerapi.validator.UsuarioAutenticado;
 import io.github.vinicusgaspari.trackerapi.service.RastreadorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +41,11 @@ public class RastreadorController implements GenericController {
     public ResponseEntity<Void> deletarPorId(@PathVariable UUID id) {
         service.deletarPorId(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RastreadorResponse> atualizarPorId(@PathVariable(required = true) UUID id, @RequestBody(required = true) RastreadorResponse response){
+        return ResponseEntity.ok(mapper.toDTO(service.atualizarPorId(id, mapper.toEntity(response))));
     }
 
 }

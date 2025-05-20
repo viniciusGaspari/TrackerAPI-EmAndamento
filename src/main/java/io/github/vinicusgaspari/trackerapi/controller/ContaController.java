@@ -21,7 +21,7 @@ public class ContaController implements GenericController {
     private final ContaMapper mapper;
 
     @PostMapping
-    public ResponseEntity<ContaResponse> salvar(@RequestBody @Valid ContaResponse response){
+    public ResponseEntity<ContaResponse> salvar(@RequestBody @Valid ContaResponse response) {
         Conta conta = service.salvar(mapper.toEntity(response));
         return ResponseEntity.created(generatorHeaderLocation(conta.getId())).body(mapper.toDTO(conta));
     }

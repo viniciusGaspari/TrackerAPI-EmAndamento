@@ -1,10 +1,9 @@
 package io.github.vinicusgaspari.trackerapi.controller.common;
 
 import io.github.vinicusgaspari.trackerapi.controller.exceptions.AcessoNegadoException;
-import io.github.vinicusgaspari.trackerapi.controller.exceptions.DuplicatedDataException;
-import io.github.vinicusgaspari.trackerapi.controller.exceptions.QuantidadeLimiteContratoException;
+import io.github.vinicusgaspari.trackerapi.controller.exceptions.DadoDuplicadoException;
+import io.github.vinicusgaspari.trackerapi.controller.exceptions.QuantidadeContratoException;
 import io.github.vinicusgaspari.trackerapi.controller.response.ErroResposta;
-import io.github.vinicusgaspari.trackerapi.controller.response.RastreadorResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestControllerAdvice
 @Slf4j
@@ -60,9 +60,9 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(DuplicatedDataException.class)
+    @ExceptionHandler(DadoDuplicadoException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErroResposta duplicatedDataException(DuplicatedDataException ex) {
+    public ErroResposta duplicatedDataException(DadoDuplicadoException ex) {
         return new ErroResposta(
                 HttpStatus.CONFLICT.value(),
                 ex.getMensagem(),
@@ -70,14 +70,13 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(QuantidadeLimiteContratoException.class)
+    @ExceptionHandler(QuantidadeContratoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErroResposta quantidadeLimiteContratoException(QuantidadeLimiteContratoException ex) {
+    public ErroResposta quantidadeLimiteContratoException(QuantidadeContratoException ex) {
         List<String> rastreadoresString = ex.getRastreadores()
                 .stream()
-                .map(RastreadorResponse::nome)
+                .map(r -> UUID.fromString(String.valueOf(r.id())).toString()) // Corrigindo acesso ao ID
                 .toList();
-
         return new ErroResposta(
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMensagem(),

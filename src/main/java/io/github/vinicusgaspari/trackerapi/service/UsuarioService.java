@@ -2,9 +2,10 @@ package io.github.vinicusgaspari.trackerapi.service;
 
 import io.github.vinicusgaspari.trackerapi.model.Usuario;
 import io.github.vinicusgaspari.trackerapi.repository.UsuarioRepository;
-import io.github.vinicusgaspari.trackerapi.validator.UsuarioAutenticado;
-import io.github.vinicusgaspari.trackerapi.validator.ValidarAcessoUsuario;
+import io.github.vinicusgaspari.trackerapi.validator.conta.ContaValidator;
 import io.github.vinicusgaspari.trackerapi.validator.contrato.ContratoValidator;
+import io.github.vinicusgaspari.trackerapi.validator.security.UsuarioAutenticado;
+import io.github.vinicusgaspari.trackerapi.validator.security.ValidarAcessoUsuario;
 import io.github.vinicusgaspari.trackerapi.validator.usuario.UsuarioValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,20 +21,18 @@ import static io.github.vinicusgaspari.trackerapi.validator.usuario.UsuarioSpecs
 @RequiredArgsConstructor
 public class UsuarioService {
 
-    private final UsuarioValidator resolver;
     private final UsuarioRepository usuarioRepository;
-    private final ContratoService contratoService;
-    private final ContaService contaService;
-    private final ContratoValidator validar;
+    private final ContratoValidator contratoValidator;
+    private final ContaValidator contaValidator;
     private final ValidarAcessoUsuario validarAcessoUsuario;
     private final UsuarioValidator usuarioValidator;
 
     private final static UsuarioAutenticado usernameContaAutenticado = new UsuarioAutenticado();
 
     public Usuario salvar(Usuario usuario) {
-        usuarioValidator.validarUsuarioPorNomeDuplicado(usuario.getNome());
-        usuario.setConta(contaService.buscarPorNome(usernameContaAutenticado.obtendoUsuarioAutenticado()));
-        usuario.setContrato(contratoService.buscarPorNome(usuario.getContrato().getNome()));
+        usuario.setNome(usuarioValidator.validarUsuarioPorNomeDuplicado(usuario.getNome()));
+        usuario.setConta(contaValidator.obterContaPorNome(usernameContaAutenticado.obtendoUsuarioAutenticado()));
+        usuario.setContrato(contratoValidator.obterContratoPorNome(usuario.getContrato().getNome()));
         return usuarioRepository.save(usuario);
     }
 
@@ -42,17 +41,15 @@ public class UsuarioService {
     }
 
     public void deletar(UUID id) {
-        Usuario usuario = validarAcessoUsuario.isAcessoValidoUsuario(id, usernameContaAutenticado.obtendoUsuarioAutenticado());
-        usuarioRepository.delete(usuario);
+        usuarioRepository.delete(validarAcessoUsuario.isAcessoValidoUsuario(id, usernameContaAutenticado.obtendoUsuarioAutenticado()));
     }
 
     public Usuario atualizar(UUID id, Usuario usuarioResponse) {
         Usuario usuario = validarAcessoUsuario.isAcessoValidoUsuario(id, usernameContaAutenticado.obtendoUsuarioAutenticado());
-        resolver.verificarDadosDuplicadosAoAtualizar(id, usuarioResponse);
-        usuario.setNome(usuarioResponse.getNome());
+        contratoValidator.verificarQuantidadeRastreadorContrato(usuario, usuario.getContrato());
+        usuario.setContrato(contratoValidator.obterContratoPorNome((usuarioResponse.getContrato().getNome())));
+        usuario.setNome(usuarioValidator.verificarDadosDuplicadosAoAtualizar(id, usuarioResponse));
         usuario.setCidade(usuarioResponse.getCidade());
-        usuario.setContrato(contratoService.buscarPorNome(usuarioResponse.getContrato().getNome()));
-        validar.verificarQuantidadeRastreadorContrato(usuario, usuario.getContrato());
         return usuarioRepository.save(usuario);
     }
 

@@ -1,6 +1,6 @@
 package io.github.vinicusgaspari.trackerapi.controller.mapper;
 
-import io.github.vinicusgaspari.trackerapi.controller.response.PesquisasPorUsuarioDTO;
+import io.github.vinicusgaspari.trackerapi.controller.response.PesquisasPorUsuarioResponse;
 import io.github.vinicusgaspari.trackerapi.controller.response.UsuarioResponse;
 import io.github.vinicusgaspari.trackerapi.model.Usuario;
 import org.mapstruct.Mapper;
@@ -12,6 +12,6 @@ public interface UsuarioMapper {
 
     UsuarioResponse toDTO(Usuario entity);
 
-    PesquisasPorUsuarioDTO toPesquisaDTO(Usuario usuario);
+    PesquisasPorUsuarioResponse toPesquisaDTO(Usuario usuario);
 
 }
