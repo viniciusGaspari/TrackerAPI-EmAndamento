@@ -4,7 +4,7 @@ import io.github.vinicusgaspari.trackerapi.model.Rastreador;
 import io.github.vinicusgaspari.trackerapi.model.Usuario;
 import io.github.vinicusgaspari.trackerapi.repository.RastreadorRepository;
 import io.github.vinicusgaspari.trackerapi.validator.contrato.ContratoValidator;
-import io.github.vinicusgaspari.trackerapi.validator.operadora.OperadoraValidator;
+import io.github.vinicusgaspari.trackerapi.validator.operadora.ChipValidator;
 import io.github.vinicusgaspari.trackerapi.validator.rastreador.RastreadorValidator;
 import io.github.vinicusgaspari.trackerapi.validator.security.UsuarioAutenticado;
 import io.github.vinicusgaspari.trackerapi.validator.security.ValidarAcessoUsuario;
@@ -28,37 +28,37 @@ public class RastreadorService {
     private final UsuarioValidator usuarioValidator;
     private final ContratoValidator contratoValidator;
     private final ValidarAcessoUsuario validarAcessoUsuario;
-    private final OperadoraValidator operadoraValidator;
+    private final ChipValidator chipValidator;
     private final RastreadorValidator rastreadorValidator;
 
     private final static UsuarioAutenticado usernameContaAutenticado = new UsuarioAutenticado();
 
     public Rastreador buscarPorId(UUID id) {
-        return validarAcessoUsuario.isAcessoValidoRasteador(id, usernameContaAutenticado.obtendoUsuarioAutenticado());
+        return validarAcessoUsuario.isAcessoValidoRasteador(id, usernameContaAutenticado.obterUsernameUsuarioAutenticado());
     }
 
     public Rastreador salvar(Rastreador rastreador) {
-        Usuario usuario = validarAcessoUsuario.isAcessoValidoUsuario(rastreador.getUsuario().getId(), usernameContaAutenticado.obtendoUsuarioAutenticado());
+        Usuario usuario = validarAcessoUsuario.isAcessoValidoUsuario(rastreador.getUsuario().getId(), usernameContaAutenticado.obterUsernameUsuarioAutenticado());
         contratoValidator.verificarQuantidadeRastreadorContrato(rastreador.getUsuario(), usuario.getContrato());
         rastreador.setNome(rastreadorValidator.validarRastreadorPorNome(rastreador.getNome()));
         rastreador.setUsuario(usuarioValidator.validarUsuarioPorId(rastreador.getUsuario().getId()));
-        rastreador.setOperadora(operadoraValidator.validarOperadoraPorId(rastreador.getOperadora().getId()));
+        rastreador.setChip(validarAcessoUsuario.isAcessoValidoChip(rastreador.getUsuario().getId(), usernameContaAutenticado.obterUsernameUsuarioAutenticado()));
         return rastreadorRepository.save(rastreador);
     }
 
     public List<Rastreador> buscarPorList(UUID id) {
-        return rastreadorRepository.findByUsuario(validarAcessoUsuario.isAcessoValidoUsuario(id, usernameContaAutenticado.obtendoUsuarioAutenticado()));
+        return rastreadorRepository.findByUsuario(validarAcessoUsuario.isAcessoValidoUsuario(id, usernameContaAutenticado.obterUsernameUsuarioAutenticado()));
     }
 
     public void deletarPorId(UUID id) {
-        rastreadorRepository.delete(validarAcessoUsuario.isAcessoValidoRasteador(id, usernameContaAutenticado.obtendoUsuarioAutenticado()));
+        rastreadorRepository.delete(validarAcessoUsuario.isAcessoValidoRasteador(id, usernameContaAutenticado.obterUsernameUsuarioAutenticado()));
     }
 
     public Rastreador atualizarPorId(UUID id, Rastreador rastreador) {
-        Rastreador rastreadorEncontrado = validarAcessoUsuario.isAcessoValidoRasteador(id, usernameContaAutenticado.obtendoUsuarioAutenticado());
+        Rastreador rastreadorEncontrado = validarAcessoUsuario.isAcessoValidoRasteador(id, usernameContaAutenticado.obterUsernameUsuarioAutenticado());
         rastreadorEncontrado.setUsuario(usuarioValidator.validarUsuarioPorId(rastreador.getUsuario().getId()));
-        rastreadorEncontrado.setNome(rastreadorValidator.validarNomeUsuarioExistente(rastreador.getNome(), id));
-        rastreadorEncontrado.setOperadora(operadoraValidator.validarOperadoraPorId(rastreador.getOperadora().getId()));
+        rastreadorEncontrado.setNome(rastreadorValidator.validarRastreadorPorNomeAoAtualizar(rastreador.getNome(), id));
+        rastreadorEncontrado.setChip(chipValidator.validarChipPorUsuario(rastreador.getUsuario(), rastreador.getChip().getId()));
         return rastreadorRepository.save(rastreadorEncontrado);
     }
 
@@ -66,7 +66,7 @@ public class RastreadorService {
 
         Specification<Rastreador> specs = Specification.where((root, query, cb) -> cb.and(
                 cb.conjunction(),
-                cb.equal(root.get("usuario").get("conta").get("username"), usernameContaAutenticado.obtendoUsuarioAutenticado())
+                cb.equal(root.get("usuario").get("conta").get("username"), usernameContaAutenticado.obterUsernameUsuarioAutenticado())
         ));
 
         if (id != null) {

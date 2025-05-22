@@ -30,6 +30,13 @@ public class Contrato {
     @Column(name = "preco", nullable = false)
     private BigDecimal preco;
 
+    @OneToOne(mappedBy = "contrato")
+    private Usuario usuario;
+
+    @ManyToOne
+    @JoinColumn(name = "conta", referencedColumnName = "id")
+    private Conta conta;
+
     @CreatedDate
     @Column(name = "data_cadastro")
     private LocalDateTime dataCadastro;

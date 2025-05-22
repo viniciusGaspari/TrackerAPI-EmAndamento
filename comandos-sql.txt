@@ -17,6 +17,7 @@ create table contrato(
     nome varchar not null,
     quantidade integer not null,
     preco numeric(5,2) not null,
+    usuario uuid not null references usuario(id),
     data_cadastro timestamp,
     data_atualizacao timestamp
 
@@ -86,16 +87,16 @@ create table rastreador(
     data_cadastro timestamp,
     data_atualizacao timestamp,
     usuario uuid references usuario(id),
-    operadora uuid not null references operadora(id)
+    chip uuid not null references chip(id)
 
 );
 
 insert into rastreador
-(id, nome, operadora, data_cadastro, data_atualizacao)
+(id, nome, chip, data_cadastro, data_atualizacao)
 values
 (uuid_generate_v4(), '17TRACK', '191c989b-708d-4fbe-bc43-8dc284f87aa3', now(), now());
 
-create table operadora (
+create table chip (
 
     id uuid not null primary key,
     nome varchar not null,
@@ -105,7 +106,7 @@ create table operadora (
 
 );
 
-insert into operadora
+insert into chip
 (id, nome, linha)
 values
 ('191c989b-708d-4fbe-bc43-8dc284f87aa3', 'VIVO', 551999999999)

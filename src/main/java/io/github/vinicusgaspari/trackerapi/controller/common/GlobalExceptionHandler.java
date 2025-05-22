@@ -2,7 +2,7 @@ package io.github.vinicusgaspari.trackerapi.controller.common;
 
 import io.github.vinicusgaspari.trackerapi.controller.exceptions.AcessoNegadoException;
 import io.github.vinicusgaspari.trackerapi.controller.exceptions.DadoDuplicadoException;
-import io.github.vinicusgaspari.trackerapi.controller.exceptions.QuantidadeContratoException;
+import io.github.vinicusgaspari.trackerapi.controller.exceptions.ContratoException;
 import io.github.vinicusgaspari.trackerapi.controller.response.ErroResposta;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -66,13 +66,13 @@ public class GlobalExceptionHandler {
         return new ErroResposta(
                 HttpStatus.CONFLICT.value(),
                 ex.getMensagem(),
-                ex.getDuplicatedField()
+                ex.getDadosDuplicados()
         );
     }
 
-    @ExceptionHandler(QuantidadeContratoException.class)
+    @ExceptionHandler(ContratoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErroResposta quantidadeLimiteContratoException(QuantidadeContratoException ex) {
+    public ErroResposta quantidadeLimiteContratoException(ContratoException ex) {
         List<String> rastreadoresString = ex.getRastreadores()
                 .stream()
                 .map(r -> UUID.fromString(String.valueOf(r.id())).toString()) // Corrigindo acesso ao ID
@@ -89,7 +89,7 @@ public class GlobalExceptionHandler {
     public ErroResposta acessoNegadoException(AcessoNegadoException ex) {
         return new ErroResposta(
                 HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage(),
+                ex.getMensagem(),
                 List.of()
         );
     }

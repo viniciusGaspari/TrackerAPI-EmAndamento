@@ -36,8 +36,8 @@ public class ClientController implements GenericController {
             @ApiResponse(responseCode = "409", description = "Client já cadastrado"),
             @ApiResponse(responseCode = "422", description = "Erro de validação nos dados")
     })
-    public ResponseEntity<ClientResponse> save(@RequestBody(required = true) ClientResponse response) {
-        Client client = service.save(mapper.toEntity(response));
+    public ResponseEntity<ClientResponse> salvar(@RequestBody(required = true) ClientResponse response) {
+        Client client = service.salvar(mapper.toEntity(response));
         return ResponseEntity.created(generatorHeaderLocation(client.getId())).body(mapper.toDTO(client));
     }
 
@@ -49,10 +49,10 @@ public class ClientController implements GenericController {
             @ApiResponse(responseCode = "200", description = "Client OAuth2 encontrado com sucesso."),
             @ApiResponse(responseCode = "400", description = "Formato inválido do ID. O valor deve ser um UUID válido."),
             @ApiResponse(responseCode = "404", description = "Nenhum Client OAuth2 encontrado para o ID informado.")})
-    public ResponseEntity<ClientResponse> findByIdClient(
+    public ResponseEntity<ClientResponse> buscarPorId(
             @Parameter(description = "UUID do Client OAuth2", required = true, example = "550e8400-e29b-41d4-a716-446655440000")
             @PathVariable UUID id) {
-        return ResponseEntity.ok(mapper.toDTO(service.findById(id)));
+        return ResponseEntity.ok(mapper.toDTO(service.buscarPorId(id)));
     }
 
     @GetMapping
@@ -64,7 +64,7 @@ public class ClientController implements GenericController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Client encontrado com sucesso.")
     })
-    public ResponseEntity<Page<ClientResponse>> findByFilters(
+    public ResponseEntity<Page<ClientResponse>> buscarPorFiltro(
             @Parameter(description = "UUID do Client", example = "550e8400-e29b-41d4-a716-446655440000")
             @RequestParam(value = "id", required = false) UUID id,
 
@@ -103,7 +103,7 @@ public class ClientController implements GenericController {
             @RequestBody(required = true)
             ClientResponse response
     ) {
-        return ResponseEntity.ok(mapper.toDTO(service.update(id, mapper.toEntity(response))));
+        return ResponseEntity.ok(mapper.toDTO(service.atualizar(id, mapper.toEntity(response))));
     }
 
     @DeleteMapping("/{id}")
@@ -114,11 +114,11 @@ public class ClientController implements GenericController {
             @ApiResponse(responseCode = "204", description = "Client deletado com sucesso."),
             @ApiResponse(responseCode = "400", description = "Formato inválido do ID."),
             @ApiResponse(responseCode = "404", description = "Nenhum Client encontrado para o ID informado.")})
-    public ResponseEntity<Void> delete(
+    public ResponseEntity<Void> deletar(
             @Parameter(description = "UUID do Client", example = "550e8400-e29b-41d4-a716-446655440000")
             @PathVariable(required = true) UUID id
     ) {
-        service.delete(id);
+        service.deletePorId(id);
         return ResponseEntity.noContent().build();
     }
 

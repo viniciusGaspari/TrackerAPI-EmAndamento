@@ -22,7 +22,7 @@ public class UsuarioValidator {
 
         if (usuarioEncontrado.isPresent()) {
             if (!usuarioEncontrado.get().getId().equals(id)) {
-                throw new DadoDuplicadoException(List.of("Nome"));
+                throw new DadoDuplicadoException(List.of("NOME DO USUARIO"));
             }
         }
         return usuario.getNome();
@@ -31,19 +31,19 @@ public class UsuarioValidator {
     public String validarUsuarioPorNomeDuplicado(String nome) {
         Optional<Usuario> usuario = usuarioRepository.findByNome(nome);
         if(usuario.isPresent()){
-            throw new DadoDuplicadoException(List.of("Nome"));
+            throw new DadoDuplicadoException(List.of("NOME DO USUARIO"));
         }
         return nome;
     }
 
     public Usuario validarUsuarioPorId(UUID id) {
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("USUARIO"));
+                .orElseThrow(() -> new EntityNotFoundException("ID DO USUARIO"));
     }
 
     public Usuario validarUsuarioPorNome(String nome) {
         return usuarioRepository.findByNome(nome)
-                .orElseThrow(() -> new EntityNotFoundException("NOME"));
+                .orElseThrow(() -> new EntityNotFoundException("NOME DO USUARIO"));
     }
 
 }

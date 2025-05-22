@@ -31,21 +31,21 @@ public class UsuarioService {
 
     public Usuario salvar(Usuario usuario) {
         usuario.setNome(usuarioValidator.validarUsuarioPorNomeDuplicado(usuario.getNome()));
-        usuario.setConta(contaValidator.obterContaPorNome(usernameContaAutenticado.obtendoUsuarioAutenticado()));
-        usuario.setContrato(contratoValidator.obterContratoPorNome(usuario.getContrato().getNome()));
+        usuario.setConta(contaValidator.obterContaPorUsername(usernameContaAutenticado.obterUsernameUsuarioAutenticado()));
+        usuario.setContrato(contratoValidator.validarContrato(usuario, usuario.getContrato().getNome()));
         return usuarioRepository.save(usuario);
     }
 
     public Usuario buscarPorId(UUID id) {
-        return validarAcessoUsuario.isAcessoValidoUsuario(id, usernameContaAutenticado.obtendoUsuarioAutenticado());
+        return validarAcessoUsuario.isAcessoValidoUsuario(id, usernameContaAutenticado.obterUsernameUsuarioAutenticado());
     }
 
     public void deletar(UUID id) {
-        usuarioRepository.delete(validarAcessoUsuario.isAcessoValidoUsuario(id, usernameContaAutenticado.obtendoUsuarioAutenticado()));
+        usuarioRepository.delete(validarAcessoUsuario.isAcessoValidoUsuario(id, usernameContaAutenticado.obterUsernameUsuarioAutenticado()));
     }
 
     public Usuario atualizar(UUID id, Usuario usuarioResponse) {
-        Usuario usuario = validarAcessoUsuario.isAcessoValidoUsuario(id, usernameContaAutenticado.obtendoUsuarioAutenticado());
+        Usuario usuario = validarAcessoUsuario.isAcessoValidoUsuario(id, usernameContaAutenticado.obterUsernameUsuarioAutenticado());
         contratoValidator.verificarQuantidadeRastreadorContrato(usuario, usuario.getContrato());
         usuario.setContrato(contratoValidator.obterContratoPorNome((usuarioResponse.getContrato().getNome())));
         usuario.setNome(usuarioValidator.verificarDadosDuplicadosAoAtualizar(id, usuarioResponse));
@@ -56,7 +56,7 @@ public class UsuarioService {
     public Page<Usuario> buscarComFiltro(UUID id, String nome, String cidade, String contrato, String role, Integer dataCadastro, Integer pagina, Integer tamanhoPagina) {
         Specification<Usuario> specs = Specification.where((root, query, cb) -> cb.and(
                 cb.conjunction(),
-                cb.equal(root.get("conta").get("username"), usernameContaAutenticado.obtendoUsuarioAutenticado())
+                cb.equal(root.get("conta").get("username"), usernameContaAutenticado.obterUsernameUsuarioAutenticado())
         ));
         if (id != null) {
             specs = specs.and(isIdEqual(id));

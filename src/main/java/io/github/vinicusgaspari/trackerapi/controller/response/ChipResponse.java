@@ -1,11 +1,11 @@
 package io.github.vinicusgaspari.trackerapi.controller.response;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
-public record OperadoraResponse(
+public record ChipResponse(
 
         UUID id,
 
@@ -13,7 +13,10 @@ public record OperadoraResponse(
         String nome,
 
         @NotBlank
-        BigDecimal linha
+        String operadora,
+
+        @NotNull
+        Integer linha
 
 ) {
 }

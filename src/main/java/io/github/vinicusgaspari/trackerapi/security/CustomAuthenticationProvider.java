@@ -1,9 +1,7 @@
 package io.github.vinicusgaspari.trackerapi.security;
 
 import io.github.vinicusgaspari.trackerapi.model.Conta;
-import io.github.vinicusgaspari.trackerapi.model.Usuario;
-import io.github.vinicusgaspari.trackerapi.service.ContaService;
-import io.github.vinicusgaspari.trackerapi.service.UsuarioService;
+import io.github.vinicusgaspari.trackerapi.validator.conta.ContaValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,12 +17,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
-    private final ContaService service;
+    private final ContaValidator contaValidator;
     private final PasswordEncoder encoder;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        Conta conta = service.buscarPorNome(authentication.getName());
+        Conta conta = contaValidator.obterContaPorUsername(authentication.getName());
 
         if (conta == null) {
             throw new UsernameNotFoundException("Usuário não encontrado");

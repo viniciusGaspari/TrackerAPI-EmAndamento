@@ -15,7 +15,7 @@ public record RastreadorResponse(
         UsuarioResponse usuario,
 
         @NotNull
-        OperadoraResponse operadora
+        ChipResponse chip
 
 ) {
 }

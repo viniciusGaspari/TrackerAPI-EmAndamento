@@ -25,9 +25,9 @@ public class Rastreador {
     @Column(name = "nome", nullable = false)
     private String nome;
 
-    @OneToOne
-    @JoinColumn(name = "operadora", referencedColumnName = "id", nullable = false)
-    private Operadora operadora;
+    @ManyToOne
+    @JoinColumn(name = "chip", referencedColumnName = "id", nullable = false)
+    private Chip chip;
 
     @ManyToOne
     @JoinColumn(name = "usuario", nullable = false)

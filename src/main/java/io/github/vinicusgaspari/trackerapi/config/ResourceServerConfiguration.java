@@ -1,5 +1,6 @@
 package io.github.vinicusgaspari.trackerapi.config;
 
+import io.github.vinicusgaspari.trackerapi.security.JwtCustomFilterChain;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -8,6 +9,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -16,7 +18,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class ResourceServerConfiguration {
 
     @Bean
-    public SecurityFilterChain resourceServer(HttpSecurity http, JwtAuthenticationConverter jwt) throws Exception {
+    public SecurityFilterChain resourceServer(HttpSecurity http, JwtAuthenticationConverter jwt, JwtCustomFilterChain jwtCustomFilterChain) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(Customizer.withDefaults())
@@ -26,16 +28,17 @@ public class ResourceServerConfiguration {
                 .authorizeHttpRequests(authorize -> {
                     authorize.anyRequest().authenticated();
                 })
+                .addFilterAfter(jwtCustomFilterChain, BearerTokenAuthenticationFilter.class)
                 .build();
     }
 
     @Bean
-    public GrantedAuthorityDefaults grantedAuthorityDefaults() {
+    public static GrantedAuthorityDefaults grantedAuthorityDefaults() {
         return new GrantedAuthorityDefaults("");
     }
 
     @Bean
-    public JwtAuthenticationConverter JwtAuthenticationConverter() {
+    public static JwtAuthenticationConverter JwtAuthenticationConverter() {
         var authorities = new JwtGrantedAuthoritiesConverter();
         authorities.setAuthorityPrefix("");
 

@@ -2,8 +2,7 @@ package io.github.vinicusgaspari.trackerapi.service;
 
 import io.github.vinicusgaspari.trackerapi.model.Client;
 import io.github.vinicusgaspari.trackerapi.repository.ClientRepository;
-import io.github.vinicusgaspari.trackerapi.validator.client.ValidarDadosDuplicadosClient;
-import jakarta.persistence.EntityNotFoundException;
+import io.github.vinicusgaspari.trackerapi.validator.client.ClientValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,7 +10,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static io.github.vinicusgaspari.trackerapi.validator.client.ClientSpecs.*;
@@ -20,44 +18,36 @@ import static io.github.vinicusgaspari.trackerapi.validator.client.ClientSpecs.*
 @RequiredArgsConstructor
 public class ClientService {
 
-    private final ValidarDadosDuplicadosClient validator;
-    private final ClientRepository repository;
+    private final ClientValidator clientValidator;
+    private final ClientRepository clientRepository;
     private final PasswordEncoder encoder;
 
-    public Client save(Client client) {
-        validator.checkDuplicatedDataToSave(client);
+    public Client salvar(Client client) {
+        clientValidator.validarContaPorUsernameAoSalvar(client);
         client.setClientSecret(encoder.encode(client.getClientSecret()));
-        return repository.save(client);
+        return clientRepository.save(client);
     }
 
-    public Client findByClientId(String clientId) {
-        return repository.findByClientId(clientId).get();
+    public Client buscarPorClientId(String clientId) {
+        return clientValidator.obterClientPorClientId(clientId);
     }
 
-    public Client findById(UUID id) {
-        Optional<Client> client = repository.findById(id);
-        if (client.isEmpty()) {
-            throw new EntityNotFoundException();
-        }
-        return client.get();
+    public Client buscarPorId(UUID id) {
+        return clientValidator.obterClientPorId(id);
     }
 
-    public Client update(UUID id, Client client) {
-        Client clientFound = findById(id);
-        clientFound.setClientId(client.getClientId());
-        clientFound.setRedirectUri(client.getRedirectUri());
-        validator.checkDuplicatedDataToUpdate(id, clientFound);
-        clientFound.setClientSecret(encoder.encode(client.getClientSecret()));
-        clientFound.setScope(client.getScope());
-        return repository.save(clientFound);
+    public Client atualizar(UUID id, Client client) {
+        Client clientEncontrado = clientValidator.obterClientPorId(id);
+        clientValidator.validarContaPorUsernameRedirectUriAoAtualizar(id, client);
+        clientEncontrado.setClientId(client.getClientId());
+        clientEncontrado.setRedirectUri(client.getRedirectUri());
+        clientEncontrado.setClientSecret(encoder.encode(client.getClientSecret()));
+        clientEncontrado.setScope(client.getScope());
+        return clientEncontrado;
     }
 
-    public void delete(UUID id) {
-        if (repository.existsById(id)) {
-            repository.delete(repository.findById(id).get());
-        } else {
-            throw new EntityNotFoundException();
-        }
+    public void deletePorId(UUID id) {
+        clientRepository.delete(clientValidator.obterClientPorId(id));
     }
 
     public Page<Client> buscarPorFiltro(UUID id, String clientId, String redirectUri, String scope, Integer pagina, Integer tamanhoPagina) {
@@ -77,7 +67,7 @@ public class ClientService {
             specs = specs.and(isScopeLike(scope));
         }
 
-        return repository.findAll(specs, PageRequest.of(pagina, tamanhoPagina));
+        return clientRepository.findAll(specs, PageRequest.of(pagina, tamanhoPagina));
 
     }
 

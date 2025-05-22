@@ -28,7 +28,13 @@ public class Conta {
     private String password;
 
     @OneToMany(mappedBy = "conta")
+    private List<Contrato> contratos;
+
+    @OneToMany(mappedBy = "conta")
     private List<Usuario> usuarios;
+
+    @OneToMany(mappedBy = "conta")
+    private List<Chip> chips;
 
     @OneToOne
     @JoinColumn(name = "role", referencedColumnName = "id")

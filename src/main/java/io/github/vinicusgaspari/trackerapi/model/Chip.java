@@ -6,15 +6,15 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Data
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "operadora")
-public class Operadora {
+@Table(name = "chip")
+public class Chip {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -25,7 +25,17 @@ public class Operadora {
     private String nome;
 
     @Column(name = "linha", length = 12, nullable = false)
-    private BigDecimal linha;
+    private Integer linha;
+
+    @Column(name = "operadora", nullable = false)
+    private String operadora;
+
+    @ManyToOne
+    @JoinColumn(name = "conta", referencedColumnName = "id")
+    private Conta conta;
+
+    @OneToMany(mappedBy = "chip")
+    private List<Rastreador> rastreador;
 
     @CreatedDate
     @Column(name = "data_cadastro")

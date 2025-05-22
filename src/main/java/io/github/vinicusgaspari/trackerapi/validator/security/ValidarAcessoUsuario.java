@@ -1,8 +1,10 @@
 package io.github.vinicusgaspari.trackerapi.validator.security;
 
 import io.github.vinicusgaspari.trackerapi.controller.exceptions.AcessoNegadoException;
+import io.github.vinicusgaspari.trackerapi.model.Chip;
 import io.github.vinicusgaspari.trackerapi.model.Rastreador;
 import io.github.vinicusgaspari.trackerapi.model.Usuario;
+import io.github.vinicusgaspari.trackerapi.validator.operadora.ChipValidator;
 import io.github.vinicusgaspari.trackerapi.validator.rastreador.RastreadorValidator;
 import io.github.vinicusgaspari.trackerapi.validator.usuario.UsuarioValidator;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ public class ValidarAcessoUsuario {
 
     private final UsuarioValidator usuarioValidator;
     private final RastreadorValidator rastreadorValidator;
+    private final ChipValidator chipValidator;
 
     public Usuario isAcessoValidoUsuario(UUID idUsuario, String usernameUsuarioLogado) {
         Usuario usuario = usuarioValidator.validarUsuarioPorId(idUsuario);
@@ -31,5 +34,13 @@ public class ValidarAcessoUsuario {
             throw new AcessoNegadoException("Conta não tem acesso");
         }
         return rastreador;
+    }
+
+    public Chip isAcessoValidoChip(UUID idUsuario, String usernameUsuarioLogado) {
+        Chip chip = chipValidator.buscarChipPorId(idUsuario);
+        if (!chip.getConta().getUsername().equals(usernameUsuarioLogado)) {
+            throw new AcessoNegadoException("Conta não tem acesso");
+        }
+        return chip;
     }
 }

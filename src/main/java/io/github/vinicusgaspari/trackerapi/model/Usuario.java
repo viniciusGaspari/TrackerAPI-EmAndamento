@@ -35,8 +35,9 @@ public class Usuario {
     private List<Rastreador> rastreadores;
 
     @OneToOne
-    @JoinColumn(name = "contrato", referencedColumnName = "id")
+    @JoinColumn(name = "contrato")
     private Contrato contrato;
+
 
     @CreatedDate
     @Column(name = "data_cadastro")

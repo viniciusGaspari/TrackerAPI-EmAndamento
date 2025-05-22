@@ -23,7 +23,7 @@ public class CustomRegisteredClientRepository implements RegisteredClientReposit
     @Override
     public RegisteredClient findByClientId(String clientId) {
 
-        Client client = service.findByClientId(clientId);
+        Client client = service.buscarPorClientId(clientId);
 
         return RegisteredClient
                 .withId(client.getId().toString())

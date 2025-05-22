@@ -8,12 +8,12 @@ import java.util.List;
 public class DadoDuplicadoException extends RuntimeException {
 
     @Getter
-    String mensagem;
+    List<String> dadosDuplicados = new ArrayList<>();
     @Getter
-    List<String> duplicatedField = new ArrayList<>();
+    String mensagem;
 
-    public DadoDuplicadoException(List<String> duplicatedFields) {
-        this.duplicatedField = duplicatedFields;
+    public DadoDuplicadoException(List<String> dadosDuplicados) {
         this.mensagem = "Dados duplicados";
+        this.dadosDuplicados = dadosDuplicados;
     }
 }

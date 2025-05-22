@@ -19,26 +19,26 @@ public class RastreadorValidator {
 
     public Rastreador buscarRastreadorPorNome(String nome) {
         return rastreadorRepository.findByNome(nome)
-                .orElseThrow(() -> new EntityNotFoundException("RASTREADOR"));
+                .orElseThrow(() -> new EntityNotFoundException("NOME DO RASTREADOR"));
     }
 
     public String validarRastreadorPorNome(String nome) {
         if (rastreadorRepository.existsByNome(nome)) {
-            throw new DadoDuplicadoException(List.of("rastreador com nome duplicado"));
+            throw new DadoDuplicadoException(List.of("NOME DO RASTREADOR"));
         }
         return nome;
     }
 
     public Rastreador buscarRastreadorPorId(UUID id) {
         return rastreadorRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("RASTREADOR"));
+                .orElseThrow(() -> new EntityNotFoundException("ID DO RASTREADOR"));
     }
 
-    public String validarNomeUsuarioExistente(String nome, UUID id) {
+    public String validarRastreadorPorNomeAoAtualizar(String nome, UUID id) {
         Optional<Rastreador> rastreadorEncontrado = rastreadorRepository.findByNome(nome);
         if (rastreadorEncontrado.isPresent()) {
             if (!rastreadorEncontrado.get().getId().equals(id)) {
-                throw new DadoDuplicadoException(List.of("rastreador com nome duplicado"));
+                throw new DadoDuplicadoException(List.of("NOME DO RASTREADOR"));
             }
         }
         return nome;
