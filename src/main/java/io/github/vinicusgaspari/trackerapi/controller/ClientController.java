@@ -33,7 +33,7 @@ public class ClientController implements GenericController {
     @PostMapping
     @Operation(
             summary = "Cadastrar novo client",
-            description = "Registra um novo client na base de dados. O campo `clientId` e `clientSecret` precisam ser exclusivos. "
+            description = "Registra um novo client na base de dados."
     )
     @ApiResponses({
             @ApiResponse(responseCode = "409", description = "Client já cadastrado"),

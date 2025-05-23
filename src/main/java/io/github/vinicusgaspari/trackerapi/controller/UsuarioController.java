@@ -39,7 +39,8 @@ public class UsuarioController implements GenericController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "409", description = "Usuário já cadastrado"),
-            @ApiResponse(responseCode = "422", description = "Erro de validação nos dados")
+            @ApiResponse(responseCode = "422", description = "Erro de validação nos dados"),
+            @ApiResponse(responseCode = "400", description = "A conta do usuário não tem permissão para o cadastro.")
     })
     public ResponseEntity<UsuarioResponse> salvar(@RequestBody(required = true) @Valid UsuarioRequest response) {
         Usuario usuario = service.salvar(mapper.toEntity(response));
