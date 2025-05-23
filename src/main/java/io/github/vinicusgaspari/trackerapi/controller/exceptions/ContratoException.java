@@ -1,6 +1,6 @@
 package io.github.vinicusgaspari.trackerapi.controller.exceptions;
 
-import io.github.vinicusgaspari.trackerapi.controller.response.RastreadorResponse;
+import io.github.vinicusgaspari.trackerapi.controller.entrypoint.rastreador.RastreadorResponse;
 import lombok.Getter;
 
 import java.util.List;

@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  dbtrackerapi:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: trackerapi
+    volumes:
+      - ./backup.sql:/docker-entrypoint-initdb.d/backup.sql
+    networks:
+      - network-trackerapi
+
+  trackerapipgadmin:
+    image: dpage/pgadmin4:9.3.0
+    depends_on:
+      - dbtrackerapi
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    restart: always
+    networks:
+      - network-trackerapi
+
+
+networks:
+  network-trackerapi:
+    driver: bridge
+
+# Caso backup.sql não inicialize junto com o docker-compose up -d coloque linha de comando abaixo no bash
+# docker exec -it docker-compose-dbtrackerapi-1 psql -U postgres -d trackerapi -f /docker-entrypoint-initdb.d/backup.sql

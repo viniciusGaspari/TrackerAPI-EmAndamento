@@ -1,7 +1,8 @@
 package io.github.vinicusgaspari.trackerapi.controller;
 
+import io.github.vinicusgaspari.trackerapi.controller.entrypoint.client.ClientRequest;
+import io.github.vinicusgaspari.trackerapi.controller.entrypoint.client.ClientResponse;
 import io.github.vinicusgaspari.trackerapi.controller.mapper.ClientMapper;
-import io.github.vinicusgaspari.trackerapi.controller.response.ClientResponse;
 import io.github.vinicusgaspari.trackerapi.model.Client;
 import io.github.vinicusgaspari.trackerapi.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -27,6 +29,7 @@ public class ClientController implements GenericController {
     private final ClientService service;
     private final ClientMapper mapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @Operation(
             summary = "Cadastrar novo client",
@@ -36,11 +39,12 @@ public class ClientController implements GenericController {
             @ApiResponse(responseCode = "409", description = "Client já cadastrado"),
             @ApiResponse(responseCode = "422", description = "Erro de validação nos dados")
     })
-    public ResponseEntity<ClientResponse> salvar(@RequestBody(required = true) ClientResponse response) {
+    public ResponseEntity<ClientResponse> salvar(@RequestBody(required = true) ClientRequest response) {
         Client client = service.salvar(mapper.toEntity(response));
         return ResponseEntity.created(generatorHeaderLocation(client.getId())).body(mapper.toDTO(client));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     @Operation(
             summary = "Buscar Client OAuth2 por ID",
@@ -55,6 +59,7 @@ public class ClientController implements GenericController {
         return ResponseEntity.ok(mapper.toDTO(service.buscarPorId(id)));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     @Operation(
             summary = "Buscar Client por filtros",
@@ -87,6 +92,7 @@ public class ClientController implements GenericController {
         return ResponseEntity.ok(pageResult.map(mapper::toDTO));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     @Operation(
             summary = "Atualizar Client",
@@ -101,11 +107,12 @@ public class ClientController implements GenericController {
             @PathVariable(required = true) UUID id,
 
             @RequestBody(required = true)
-            ClientResponse response
+            ClientRequest response
     ) {
         return ResponseEntity.ok(mapper.toDTO(service.atualizar(id, mapper.toEntity(response))));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Deletar Client",

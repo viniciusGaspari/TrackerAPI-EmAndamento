@@ -1,13 +1,15 @@
 package io.github.vinicusgaspari.trackerapi.controller;
 
+import io.github.vinicusgaspari.trackerapi.controller.entrypoint.rastreador.RastreadorRequest;
 import io.github.vinicusgaspari.trackerapi.controller.mapper.RastreadorMapper;
-import io.github.vinicusgaspari.trackerapi.controller.response.RastreadorResponse;
+import io.github.vinicusgaspari.trackerapi.controller.entrypoint.rastreador.RastreadorResponse;
 import io.github.vinicusgaspari.trackerapi.model.Rastreador;
 import io.github.vinicusgaspari.trackerapi.service.RastreadorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,33 +24,39 @@ public class RastreadorController implements GenericController {
     private final RastreadorService service;
     private final RastreadorMapper mapper;
 
+    @PreAuthorize("hasRole('ADMIN', 'ASSISTENTE')")
     @PostMapping
-    public ResponseEntity<RastreadorResponse> salvar(@RequestBody RastreadorResponse dto) {
+    public ResponseEntity<RastreadorResponse> salvar(@RequestBody RastreadorRequest dto) {
         Rastreador rastreador = service.salvar(mapper.toEntity(dto));
         return ResponseEntity.created(generatorHeaderLocation(rastreador.getId())).body(mapper.toDTO(rastreador));
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'ASSISTENTE')")
     @GetMapping("/{id}")
     public ResponseEntity<RastreadorResponse> buscarPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(mapper.toDTO(service.buscarPorId(id)));
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'ASSISTENTE')")
     @GetMapping("/usuario/{id}")
     public ResponseEntity<List<RastreadorResponse>> buscarPorIdUsuario(@PathVariable UUID id) {
         return ResponseEntity.ok(mapper.toListDTO(service.buscarPorList(id)));
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'ASSISTENTE')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarPorId(@PathVariable UUID id) {
         service.deletarPorId(id);
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'ASSISTENTE')")
     @PutMapping("/{id}")
-    public ResponseEntity<RastreadorResponse> atualizarPorId(@PathVariable(required = true) UUID id, @RequestBody(required = true) RastreadorResponse response) {
+    public ResponseEntity<RastreadorResponse> atualizarPorId(@PathVariable(required = true) UUID id, @RequestBody(required = true) RastreadorRequest response) {
         return ResponseEntity.ok(mapper.toDTO(service.atualizarPorId(id, mapper.toEntity(response))));
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'ASSISTENTE')")
     @GetMapping
     public ResponseEntity<Page<RastreadorResponse>> buscarPorFiltro(
             @RequestParam(value = "id", required = false) UUID id,

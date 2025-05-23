@@ -19,7 +19,7 @@ public class ChipValidator {
 
     private final ChipRepository chipRepository;
 
-    public Chip buscarChipPorId(UUID id) {
+    public Chip obterChipPorId(UUID id) {
         return chipRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("ID DO CHIP"));
     }
@@ -47,7 +47,7 @@ public class ChipValidator {
     }
 
     public Chip validarChipPorUsuario(Usuario usuario, UUID idChip) {
-        Chip chipEncontrado = buscarChipPorId(idChip);
+        Chip chipEncontrado = obterChipPorId(idChip);
         if (usuario.getConta().getUsername().equals(chipEncontrado.getConta().getUsername())) {
             return chipEncontrado;
         }

@@ -26,15 +26,15 @@ public class ChipService {
     }
 
     public Chip buscarPorId(UUID id) {
-        return chipValidator.buscarChipPorId(id);
+        return chipValidator.obterChipPorId(id);
     }
 
     public void deletarPorId(UUID id) {
-        chipRepository.delete(chipValidator.buscarChipPorId(id));
+        chipRepository.delete(chipValidator.obterChipPorId(id));
     }
 
     public Chip atualizar(UUID id, Chip chip) {
-        Chip chipEncontrado = chipValidator.buscarChipPorId(id);
+        Chip chipEncontrado = chipValidator.obterChipPorId(id);
         chipEncontrado.setNome(chipValidator.validarChipNomeAoAtualizar(id, chip));
         chipEncontrado.setOperadora(chip.getOperadora());
         chipEncontrado.setLinha(chip.getLinha());

@@ -25,7 +25,7 @@ public class UsuarioValidator {
                 throw new DadoDuplicadoException(List.of("NOME DO USUARIO"));
             }
         }
-        return usuario.getNome();
+        return usuario.getNome()    ;
     }
 
     public String validarUsuarioPorNomeDuplicado(String nome) {

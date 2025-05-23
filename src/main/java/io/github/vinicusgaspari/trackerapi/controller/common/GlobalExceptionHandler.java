@@ -3,7 +3,7 @@ package io.github.vinicusgaspari.trackerapi.controller.common;
 import io.github.vinicusgaspari.trackerapi.controller.exceptions.AcessoNegadoException;
 import io.github.vinicusgaspari.trackerapi.controller.exceptions.DadoDuplicadoException;
 import io.github.vinicusgaspari.trackerapi.controller.exceptions.ContratoException;
-import io.github.vinicusgaspari.trackerapi.controller.response.ErroResposta;
+import io.github.vinicusgaspari.trackerapi.controller.entrypoint.exceptions.ErroRespostaResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,14 +23,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    public ErroResposta handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ErroRespostaResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         log.info("Resposta inválida");
         List<String> fieldErrorList = ex.getFieldErrors()
                 .stream()
                 .map(FieldError::getField) // Extrai diretamente o nome do campo
                 .toList();
 
-        return new ErroResposta(
+        return new ErroRespostaResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 "Campos obrigatório",
                 fieldErrorList
@@ -41,8 +41,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErroResposta entityNotFoundException(EntityNotFoundException ex) {
-        return new ErroResposta(
+    public ErroRespostaResponse entityNotFoundException(EntityNotFoundException ex) {
+        return new ErroRespostaResponse(
                 HttpStatus.NOT_FOUND.value(),
                 "Entidade não encontrada: " + ex.getMessage(),
                 List.of()
@@ -51,9 +51,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErroResposta methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+    public ErroRespostaResponse methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         log.info("ID inválido");
-        return new ErroResposta(
+        return new ErroRespostaResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "ID incorreto",
                 List.of()
@@ -62,8 +62,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DadoDuplicadoException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErroResposta duplicatedDataException(DadoDuplicadoException ex) {
-        return new ErroResposta(
+    public ErroRespostaResponse duplicatedDataException(DadoDuplicadoException ex) {
+        return new ErroRespostaResponse(
                 HttpStatus.CONFLICT.value(),
                 ex.getMensagem(),
                 ex.getDadosDuplicados()
@@ -72,12 +72,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ContratoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErroResposta quantidadeLimiteContratoException(ContratoException ex) {
+    public ErroRespostaResponse quantidadeLimiteContratoException(ContratoException ex) {
         List<String> rastreadoresString = ex.getRastreadores()
                 .stream()
                 .map(r -> UUID.fromString(String.valueOf(r.id())).toString()) // Corrigindo acesso ao ID
                 .toList();
-        return new ErroResposta(
+        return new ErroRespostaResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMensagem(),
                 rastreadoresString
@@ -86,8 +86,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AcessoNegadoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErroResposta acessoNegadoException(AcessoNegadoException ex) {
-        return new ErroResposta(
+    public ErroRespostaResponse acessoNegadoException(AcessoNegadoException ex) {
+        return new ErroRespostaResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMensagem(),
                 List.of()

@@ -1,8 +1,9 @@
 package io.github.vinicusgaspari.trackerapi.controller;
 
+import io.github.vinicusgaspari.trackerapi.controller.entrypoint.usuario.UsuarioRequest;
 import io.github.vinicusgaspari.trackerapi.controller.mapper.UsuarioMapper;
-import io.github.vinicusgaspari.trackerapi.controller.response.PesquisasPorUsuarioResponse;
-import io.github.vinicusgaspari.trackerapi.controller.response.UsuarioResponse;
+import io.github.vinicusgaspari.trackerapi.controller.entrypoint.usuario.PesquisasPorUsuarioResponse;
+import io.github.vinicusgaspari.trackerapi.controller.entrypoint.usuario.UsuarioResponse;
 import io.github.vinicusgaspari.trackerapi.model.Usuario;
 import io.github.vinicusgaspari.trackerapi.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -29,6 +31,7 @@ public class UsuarioController implements GenericController {
     private final UsuarioService service;
     private final UsuarioMapper mapper;
 
+    @PreAuthorize("hasRole('ADMIN', 'ASSISTENTE')")
     @PostMapping
     @Operation(
             summary = "Cadastrar novo usuário",
@@ -38,11 +41,12 @@ public class UsuarioController implements GenericController {
             @ApiResponse(responseCode = "409", description = "Usuário já cadastrado"),
             @ApiResponse(responseCode = "422", description = "Erro de validação nos dados")
     })
-    public ResponseEntity<UsuarioResponse> salvar(@RequestBody(required = true) @Valid UsuarioResponse response) {
+    public ResponseEntity<UsuarioResponse> salvar(@RequestBody(required = true) @Valid UsuarioRequest response) {
         Usuario usuario = service.salvar(mapper.toEntity(response));
         return ResponseEntity.created(generatorHeaderLocation(usuario.getId())).body(mapper.toDTO(usuario));
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'ASSISTENTE')")
     @GetMapping("/{id}")
     @Operation(
             summary = "Buscar usuário por ID",
@@ -59,6 +63,7 @@ public class UsuarioController implements GenericController {
         return ResponseEntity.ok(mapper.toDTO(service.buscarPorId(id)));
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'ASSISTENTE')")
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Excluir usuário",
@@ -76,6 +81,7 @@ public class UsuarioController implements GenericController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'ASSISTENTE')")
     @PutMapping("/{id}")
     @Operation(
             summary = "Atualizar usuário",
@@ -89,10 +95,11 @@ public class UsuarioController implements GenericController {
     public ResponseEntity<UsuarioResponse> atualizar(
             @Parameter(description = "UUID do Usuário", required = true, example = "550e8400-e29b-41d4-a716-446655440000")
             @PathVariable UUID id,
-            @RequestBody(required = true) UsuarioResponse response) {
+            @RequestBody(required = true) UsuarioRequest response) {
         return ResponseEntity.ok(mapper.toDTO(service.atualizar(id, mapper.toEntity(response))));
     }
 
+    @PreAuthorize("hasRole('ADMIN', 'ASSISTENTE')")
     @GetMapping
     @Operation(
             summary = "Buscar usuários por filtros",

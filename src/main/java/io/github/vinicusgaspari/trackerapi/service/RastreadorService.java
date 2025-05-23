@@ -42,7 +42,7 @@ public class RastreadorService {
         contratoValidator.verificarQuantidadeRastreadorContrato(rastreador.getUsuario(), usuario.getContrato());
         rastreador.setNome(rastreadorValidator.validarRastreadorPorNome(rastreador.getNome()));
         rastreador.setUsuario(usuarioValidator.validarUsuarioPorId(rastreador.getUsuario().getId()));
-        rastreador.setChip(validarAcessoUsuario.isAcessoValidoChip(rastreador.getUsuario().getId(), usernameContaAutenticado.obterUsernameUsuarioAutenticado()));
+        rastreador.setChip(validarAcessoUsuario.isAcessoValidoChip(rastreador.getChip().getId(), usernameContaAutenticado.obterUsernameUsuarioAutenticado()));
         return rastreadorRepository.save(rastreador);
     }
 

@@ -1,11 +1,7 @@
 package io.github.vinicusgaspari.trackerapi.repository;
 
-import io.github.vinicusgaspari.trackerapi.controller.response.RastreadorResponse;
 import io.github.vinicusgaspari.trackerapi.model.Rastreador;
 import io.github.vinicusgaspari.trackerapi.model.Usuario;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

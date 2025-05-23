@@ -23,23 +23,23 @@ public class ValidarAcessoUsuario {
     public Usuario isAcessoValidoUsuario(UUID idUsuario, String usernameUsuarioLogado) {
         Usuario usuario = usuarioValidator.validarUsuarioPorId(idUsuario);
         if (!usuario.getConta().getUsername().equals(usernameUsuarioLogado)) {
-            throw new AcessoNegadoException("Conta não tem acesso");
+            throw new AcessoNegadoException("USUARIO");
         }
         return usuario;
     }
 
-    public Rastreador isAcessoValidoRasteador(UUID idUsuario, String usernameUsuarioLogado) {
-        Rastreador rastreador = rastreadorValidator.buscarRastreadorPorId(idUsuario);
+    public Rastreador isAcessoValidoRasteador(UUID idRastreador, String usernameUsuarioLogado) {
+        Rastreador rastreador = rastreadorValidator.buscarRastreadorPorId(idRastreador);
         if (!rastreador.getUsuario().getConta().getUsername().equals(usernameUsuarioLogado)) {
-            throw new AcessoNegadoException("Conta não tem acesso");
+            throw new AcessoNegadoException("RASTREADOR");
         }
         return rastreador;
     }
 
-    public Chip isAcessoValidoChip(UUID idUsuario, String usernameUsuarioLogado) {
-        Chip chip = chipValidator.buscarChipPorId(idUsuario);
+    public Chip isAcessoValidoChip(UUID idChip, String usernameUsuarioLogado) {
+        Chip chip = chipValidator.obterChipPorId(idChip);
         if (!chip.getConta().getUsername().equals(usernameUsuarioLogado)) {
-            throw new AcessoNegadoException("Conta não tem acesso");
+            throw new AcessoNegadoException("CHIP");
         }
         return chip;
     }
