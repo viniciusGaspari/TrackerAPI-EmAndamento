@@ -27,6 +27,24 @@ Ações sobre entidades de outros usuários não são permitidas, assegurando **
 
 ---
 
+## 🎯 Planos de Aprendizado e Evolução
+
+A TrackerAPI está em constante aprimoramento, refletindo minha jornada de aprendizado e evolução como desenvolvedor.  
+Atualmente, estou estudando e planejando integrar **novas tecnologias e conceitos** para tornar o projeto mais robusto e escalável.
+
+### 📌 Tecnologias e Conceitos em Estudo:
+- **Mensageria**: Implementação de **RabbitMQ** ou **Kafka** para comunicação eficiente entre serviços.
+- **Spring Security**: Aprimoramento da autenticação e autorização, adicionando **OAuth 2.0** e técnicas avançadas de segurança.
+- **ReactJS**: Desenvolvimento de uma interface moderna e interativa para melhorar a experiência dos usuários da API.
+- **Microserviços**: Refatoração do projeto para uma **arquitetura distribuída**, garantindo melhor escalabilidade e organização.
+- **Cloud**: Integração com plataformas de cloud como **AWS**, **Azure** ou **Google Cloud** para **deploy automatizado** e alta disponibilidade.
+
+### 🔄 Evolução Contínua
+Cada novo aprendizado será incorporado à API, trazendo **mais segurança, desempenho e escalabilidade** para o projeto.  
+Fique atento às atualizações! 🚀
+
+---
+
 ## 📌 Recomendações
 O projeto utiliza **Docker Compose** para facilitar a execução de containers, incluindo a configuração automática do banco de dados.  
 Isso **requer o Docker Compose instalado na IDE**.
