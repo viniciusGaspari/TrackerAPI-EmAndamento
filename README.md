@@ -18,8 +18,19 @@ O projeto usa diversas tecnologias modernas para garantir um ambiente eficiente 
 ## Sobre o Projeto
 Olá, dev! 🚀 Este é meu primeiro projeto utilizando os conhecimentos adquiridos no curso **Spring Boot Expert** da Udemy, ministrado pelo professor **Dougglas Sousa**.
 
-O **TrackerAPI** foca na **segurança dos dados**, garantindo que apenas usuários autenticados via **Spring Security** possam visualizar, editar, salvar e buscar suas **próprias entidades**.  
-Ações sobre entidades de outros usuários não são permitidas, assegurando **controle e privacidade**.
+## 🔒 Segurança e Controle de Acesso
+
+O **TrackerAPI** foca na **segurança dos dados**, garantindo que apenas usuários autenticados via **Spring Security** possam **visualizar, editar, salvar e buscar** suas próprias entidades.
+
+A API é construída utilizando **RESTful principles**, com controladores definidos via `@RestController`. Isso assegura uma abordagem padronizada e eficiente na comunicação entre o cliente e o servidor.
+
+### 🚧 Controle de Acesso e Privacidade
+- **Restrição de operações**: Usuários só podem manipular **suas próprias entidades**.
+- **Spring Security integrado**: Gerenciamento seguro de autenticação e autorização.
+- **Tratamento de exceções**: Em caso de acesso negado, a API pode retornar uma mensagem genérica, como **"Entidade não encontrada"**, evitando revelar informações sobre outros registros.
+
+Com essa implementação, a API garante **segurança, escalabilidade e conformidade** com boas práticas do desenvolvimento REST. 🚀
+
 
 ### 🔒 Tratamento de Erros e Segurança
 - Em caso de **acesso negado**, a API retorna uma exceção informando que a conta autenticada **não tem permissão** para acessar determinada entidade.
